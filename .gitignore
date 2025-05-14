@@ -1,0 +1,93 @@
+# Visual Studio / .NET Core 用の .gitignore ファイル
+
+# ビルド結果
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio の一時ファイル
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# キャッシュと中間ファイル
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# ReSharper などのツールの一時ファイル
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Visual Studio キャッシュディレクトリ
+.vs/
+
+# Visual Studio プロジェクト固有のファイル
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# NuGet パッケージ
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# ローカル設定ファイル
+appsettings.Development.json
+appsettings.local.json
+appsettings.*.json
+!appsettings.json
+
+# SQLite データベースファイル
+*.db
+*.sqlite3
+*.sqlite
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code 設定
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
