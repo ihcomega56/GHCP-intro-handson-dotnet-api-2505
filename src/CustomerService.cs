@@ -42,28 +42,33 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services
         }
 
         // 取引先詳細を返す
-        public async Task<Customer> GetCustomerDetailAsync(int? custId = null)
+        public async Task<CustomerDto> GetCustomerDetailAsync(int? custId = null)
         {
             if (!custId.HasValue)
             {
                 throw new ArgumentNullException("顧客IDが指定されていません");
             }
 
-            var c = await _db.Customers.FirstOrDefaultAsync(c => c.Id == custId.Value);
+            // 顧客情報と取引数を1回のクエリで取得
+            var customerWithCount = await _db.Customers
+                .Where(c => c.Id == custId.Value)
+                .Select(c => new
+                {
+                    Customer = c,
+                    TransactionCount = _db.Transactions.Count(t => t.CustomerId == c.Id)
+                })
+                .FirstOrDefaultAsync();
 
-            if (c == null)
+            if (customerWithCount == null)
             {
                 throw new KeyNotFoundException("指定されたIDの取引先が見つかりません");
             }
 
             // 1件の取引先の詳細を返す
-            return new Customer
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Email = c.Email,
-                Phone = c.Phone
-            };
+            return ConvertCustomerToDto(
+                cust: customerWithCount.Customer,
+                transactionCount: customerWithCount.TransactionCount
+            );
         }
 
         public async Task<CustomerDto> CreateCustomerAsync(Customer? custData = null)
@@ -77,20 +82,11 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services
             _db.Customers.Add(custData);
             await _db.SaveChangesAsync();
 
-            return new CustomerDto
-            {
-                Customer = new Customer
-                {
-                    Id = custData.Id,
-                    Name = custData.Name,
-                    Email = custData.Email,
-                    Phone = custData.Phone
-                },
-                ResultMessage = "取引先を登録しました"
-            };
+            return ConvertCustomerToDto(cust: custData, resultMessage: "取引先を登録しました");
         }
          
           // 取引先に紐づく取引の操作を行うためのメソッド
+          // ハンズオン内個人ワークにおけるメインの改善対象
         public async Task<object> ProcessTransactionOperationAsync(string operation, int? custId = null, Customer? custData = null, Transaction? trData = null)
         {
             if (operation == "transactions")
@@ -167,6 +163,22 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services
             {
                 throw new NotSupportedException($"操作 '{operation}' はサポートされていません");
             }
+        }
+
+        private CustomerDto ConvertCustomerToDto(Customer cust, int? transactionCount = 0, string? resultMessage = null)
+        {
+            return new CustomerDto
+            {
+                Customer = new Customer
+                {
+                    Id = cust.Id,
+                    Name = cust.Name,
+                    Email = cust.Email,
+                    Phone = cust.Phone
+                },
+                TransactionCount = transactionCount,
+                ResultMessage = resultMessage
+            };
         }
     }
 }

@@ -42,7 +42,12 @@ app.MapGet("/customers/{id}", async (int id, CustomerService service) =>
     try
     {
         var customer = await service.GetCustomerDetailAsync(id);
-        return Results.Ok(customer);
+        return Results.Ok(new
+        {
+            customer = customer.Customer,
+            transactionCount = customer.TransactionCount
+        }
+        );
     }
     catch (KeyNotFoundException ex)
     {

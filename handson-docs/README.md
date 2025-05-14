@@ -1,4 +1,41 @@
-﻿## アプリケーションの実行手順
+﻿## アプリケーションのダウンロード
+
+### Gitを使う場合
+
+※IDEに付属のGit機能をお使いいただいてもかまいません
+
+#### HTTPS認証とPersonal Access Tokenを使う場合
+
+次のコマンドを実行します
+
+```shell
+cd /path/to/your-workspace-folder/
+git clone https://github.com/ihcomega56/GHCP-intro-handson-dotnet-api-2505.git
+```
+
+#### SSH認証を使う場合
+
+次のコマンドを実行します
+
+```shell
+cd /path/to/your-workspace-folder/
+git clone git@github.com:ihcomega56/GHCP-intro-handson-dotnet-api-2505.git
+```
+
+### Gitを使わない場合
+
+1. https://github.com/ihcomega56/GHCP-intro-handson-dotnet-api-2505 にアクセスします
+1. 画面上部右側の `Code` ボタン（緑色） -> `Download ZIP` ボタンの順にクリックします
+
+## アプリケーションの実行手順
+
+### Visual Studio 2022で実行する場合 
+
+Visual Studio のデバッグ機能を体験するにはこちらがおすすめです。
+
+1. Visual Studio 2022でソリューションファイル `CusomerApi.sln` を開きます
+1. プロジェクト `CustomerApi.csproj` を右クリックし、「スタートアッププロジェクトに設定」を選択します
+1. ツールバーの「デバッグの開始」ボタン（またはF5キー）をクリックしてアプリケーションを実行します
 
 ### PowerShellで実行する場合
 
@@ -16,17 +53,15 @@
    dotnet run
    ```
 
-### Visual Studio 2022で実行する場合
+## データ登録用のPowerShellスクリプト
 
-1. Visual Studio 2022でソリューションファイル（.sln）を開きます
-1. スタートアッププロジェクトを右クリックし、「スタートアッププロジェクトに設定」を選択します
-1. ツールバーの「デバッグの開始」ボタン（またはF5キー）をクリックしてアプリケーションを実行します
+開発環境ではアプリケーションを立ち上げるとシードデータが入力されるようになっています。追加でデータを登録したい場合は次のスクリプトをお使いください
 
-## データ追加用のPowerShellスクリプト
+### 顧客データ登録
 
 ```powershell
 # API エンドポイント URL
-$Url = "https://localhost:7514/customers"
+$Url = "http://localhost:5514/customers"
 
 # 顧客データのリスト
 $Customers = @(

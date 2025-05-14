@@ -1,1 +1,1 @@
-# dotnet-ws
+GitHub Copilot の入門ワークショップです。アプリケーションの実行手順・ハンズオン手順は [handson-docs](handson-docs) 内にあります。
