@@ -61,6 +61,32 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services.Tests
         }
 
         [TestMethod]
+        public async Task GetCustomerListAsync_List_ReturnsCorrectTransactionCounts()
+        {
+            // Arrange
+            using var db = GetInMemoryDbContext();
+            SeedTestData(db);
+            var service = new CustomerService(db);
+
+            // Act
+            var result = await service.GetCustomerListAsync();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
+            
+            // Alice should have 2 transactions
+            var alice = result.FirstOrDefault(c => c.Customer.Name == "Alice");
+            Assert.IsNotNull(alice);
+            Assert.AreEqual(2, alice.TransactionCount);
+            
+            // Bob should have 1 transaction
+            var bob = result.FirstOrDefault(c => c.Customer.Name == "Bob");
+            Assert.IsNotNull(bob);
+            Assert.AreEqual(1, bob.TransactionCount);
+        }
+
+        [TestMethod]
         public async Task GetCustomerDetailAsync_Get_ReturnsCorrectCustomer()
         {
             // Arrange
@@ -73,8 +99,8 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services.Tests
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Alice", result.Name);
-            Assert.AreEqual("alice@example.com", result.Email);
+            Assert.AreEqual("Alice", result.Customer.Name);
+            Assert.AreEqual("alice@example.com", result.Customer.Email);
         }
 
         [TestMethod]

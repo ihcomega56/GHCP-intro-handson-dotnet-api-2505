@@ -17,24 +17,28 @@ namespace GHCP_intro_handson_2505_dotnet_api.Services
         // 取引先一覧を返す
         public async Task<List<CustomerDto>> GetCustomerListAsync()
         {
-            // 取引先一覧を取得
-            var result = await _db.Customers.ToListAsync();
-            var data = new List<CustomerDto>();
-            foreach (var c in result)
-            {
-                // 各顧客のトランザクション数を取得
-                var cnt = await _db.Transactions.CountAsync(t => t.CustomerId == c.Id);
+            // 顧客とトランザクション数を一括で取得し、N+1問題を回避
+            var customerList = await _db.Customers
+                .Select(c => new
+                {
+                    Customer = c,
+                    TransactionCount = _db.Transactions.Count(t => t.CustomerId == c.Id)
+                })
+                .ToListAsync();
 
+            var data = new List<CustomerDto>(customerList.Count);
+            foreach (var item in customerList)
+            {
                 data.Add(new CustomerDto
                 {
                     Customer = new Customer
                     {
-                        Id = c.Id,
-                        Name = c.Name,
-                        Email = c.Email,
-                        Phone = c.Phone
+                        Id = item.Customer.Id,
+                        Name = item.Customer.Name,
+                        Email = item.Customer.Email,
+                        Phone = item.Customer.Phone
                     },
-                    TransactionCount = cnt,
+                    TransactionCount = item.TransactionCount,
                     ResultMessage = null
                 });
             }
